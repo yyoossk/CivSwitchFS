@@ -269,7 +269,9 @@ function ipcFileInvalidate(fsHandle, path, size) {
     var fileHandle = ipcOpenFile(fsHandle, path, 1);
     if (!fileHandle) return -1;
     var pkt = allocPage(0x2000);
-    prepPacket(pkt, 4, 0x0C, []);
+    // Raw count 0x0E: (0x10 padding + 0x10 CMIF header + 0x18 input) / 4,
+    // matching libnx cmifMakeRequest. 0x0C undercounted the padding.
+    prepPacket(pkt, 4, 0x0E, []);
     write32(pkt + 0x10n, 0x49434653n);
     write32(pkt + 0x18n, 5n);                    // cmd 5 = OperateRange
     write32(pkt + 0x20n, 2n);                    // operation = 2 (invalidate)
