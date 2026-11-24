@@ -199,6 +199,12 @@ window.__cfsCreateInstaller = function (options) {
                     var report = { bytes: candidate.length };
                     if (!publish) return report;
                     if (fs.exists(sourcePath)) fs.delete(sourcePath);
+                    // The game's save folders may not exist yet (no
+                    // single-player save was ever written): CreateFile
+                    // answers 0x202 PathNotFound then. Create them first;
+                    // mkdir is a no-op when they are already there.
+                    fs.mkdir('save:/saves');
+                    fs.mkdir('save:/saves/Single');
                     await fs.writeNew(sourcePath, candidate);
                     fs.commit();
                     installed = true;

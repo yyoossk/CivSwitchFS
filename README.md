@@ -3,7 +3,7 @@
 ## About this fork / このフォークについて
 
 This is a fork of [SeanHeuc/CivSwitchFS](https://github.com/SeanHeuc/CivSwitchFS).
-It carries seven improvements on top of upstream, added in three releases (improved-20261117, improved-20261121, improved-20261124).
+It carries eight improvements on top of upstream, added in four releases (improved-20261117, improved-20261121, improved-20261124, improved-20261124b).
 Everything else is unchanged from upstream: the delay tables, the attempt budget (10, up to 30), and the wave budgets.
 
 ### improved-20261117
@@ -53,12 +53,20 @@ DIRTY_FILE_SIZE goes from 0x800000 (8 MiB) to 0x700000 (7 MiB).
 This leaves 1 MiB of headroom under the BC save-data cap for metadata and other outstanding data.
 The scratch tree is committed at setup time, so its metadata is flushed before the race begins.
 
+### improved-20261124b
+
+8. **Installer creates the save folders** (persist/installer.js)
+When the console's save data has no saves/Single folder, installing the autoloader save failed at the file creation step with `create : 0x202` (PathNotFound).
+The installer now creates `save:/saves` and `save:/saves/Single` first when they are missing.
+Creating them is a no-op when they already exist.
+The payload that runs at Load Game is unchanged from improved-20261124.
+
 Verification status: improvements 1 and 2 are verified on real hardware.
-Improvements 3 to 7 are verified at the source and payload level only.
+Improvements 3 to 8 are verified at the source and payload level only.
 
 ### このフォークの改良点
 
-このフォークは [SeanHeuc/CivSwitchFS](https://github.com/SeanHeuc/CivSwitchFS) に、3回のリリース (improved-20261117、improved-20261121、improved-20261124) で7つの改良を加えたものです。
+このフォークは [SeanHeuc/CivSwitchFS](https://github.com/SeanHeuc/CivSwitchFS) に、4回のリリース (improved-20261117、improved-20261121、improved-20261124、improved-20261124b) で8つの改良を加えたものです。
 それ以外は upstream のままです。
 遅延テーブル、アテンプト数 (10回、最大30回)、ウェーブ数は変更していません。
 
@@ -110,8 +118,16 @@ DIRTY_FILE_SIZE を 0x800000 (8 MiB) から 0x700000 (7 MiB) にしました。
 BC セーブデータの上限に対して、メタデータなどの分として 1 MiB の余裕を残します。
 スクラッチツリーはセットアップ時に commit されるため、メタデータはレース開始前にフラッシュされます。
 
+improved-20261124b:
+
+8. **インストーラーがセーブフォルダを作成** (persist/installer.js)
+本体のセーブデータに saves/Single フォルダが無いと、オートローダーセーブのインストールがファイル作成の段階で「create : 0x202」(PathNotFound) となり失敗していました。
+不足している場合は、まず `save:/saves` と `save:/saves/Single` を作成してから書き込むようにしました。
+既にある場合は何もしません。
+「ゲームをロード」で動くペイロード自体は improved-20261124 から変更ありません。
+
 検証の状態: 改良1と2は実機確認済みです。
-改良3から7は、ソースとペイロードのレベルでの検証のみです。
+改良3から8は、ソースとペイロードのレベルでの検証のみです。
 
 ---
 
